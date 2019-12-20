@@ -1,0 +1,30 @@
+{
+    "variables": {
+	    "machine_type": "",
+	    "project_id": null,
+            "source_image_family": null
+    },	    
+    "builders": [
+        {
+            "type": "googlecompute",
+            "image_name": "reddit-base-{{timestamp}}",
+            "image_family": "reddit-base",
+            "zone": "us-central1-a",
+            "ssh_username": "appuser",
+	    "machine_type": "{{ user `machine_type` }}",
+	    "project_id": "{{ user `project_id` }}",
+            "source_image_family": "{{ user `source_image_family` }}"
+        }
+    ],
+    "provisioners": [
+        {
+            "type" : "ansible",
+            "user" : "appuser",
+            "playbook_file" : "/home/sulgin/otus_cloud/ansible/reddit_app.yml",
+            "ansible_env_vars": [ "ANSIBLE_HOST_KEY_CHECKING=False", "ANSIBLE_SSH_ARGS='-o ForwardAgent=yes -o ControlMaster=auto -o ControlPersist=60s'"],
+            "inventory_directory": "/home/sulgin/otus_cloud/ansible/inventory",
+            "groups": ["all"]
+        }
+
+    ]
+}
